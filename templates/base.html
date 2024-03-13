@@ -30,22 +30,20 @@
       </ul>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <!-- show when no one is logged in
-          <a href="XXX" class="btn-sm btn btn-outline-light">Sign Up</a>
-          <a href="XXX" class="btn-sm btn btn-outline-light">Log In</a>
-          -->
-
-          <!-- show when someone is logged in
+          {% if not user_logged_in %}
+          <a href="/signup" class="btn-sm btn btn-outline-light">Sign Up</a>
+          <a href="/login" class="btn-sm btn btn-outline-light">Log In</a>
+          {% else %}
           <a href="/profile" class="nav-link">FULL NAME</a>
-          -->
+          {% endif %}
         </li>
       </ul>
 
-      <!-- show when someone is logged in
+      {% if user_logged_in %}
       <form class="form-inline my-2 my-lg-0">
         <button class="btn-sm btn btn-outline-light">Log Out</button>
       </form>
-      -->
+      {% endif %}
 
     </div>
   </nav>
@@ -60,7 +58,6 @@
 
     {% block content %} content here {% endblock %}
   </div>
-
 </body>
 
 </html>

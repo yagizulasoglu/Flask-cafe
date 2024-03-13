@@ -14,6 +14,18 @@
 
     <h1>{{ cafe.name }}</h1>
 
+    {% if cafe.is_liked_by %}
+    <form action="/api/unlike" method="POST">
+      {{ g.csrf_form.hidden_tag() }}
+      <button type="submit" id="unlike-button">Unlike</button>
+    </form>
+    {% else %}
+    <form action="/api/like" method="POST">
+      {{ g.csrf_form.hidden_tag() }}
+      <button type="submit" id="like-button">Like</button>
+    </form>
+    {% endif %}
+
     <p class="lead">{{ cafe.description }}</p>
 
     <p><a href="{{ cafe.url }}">{{ cafe.url }}</a></p>
@@ -32,4 +44,5 @@
   </div>
 
 </div>
+<script src="static/like.js"></script>
 {% endblock %}

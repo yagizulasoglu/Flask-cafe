@@ -4,8 +4,31 @@
 
 {% block content %}
 
-<h1 class="mb-4">Add Cafe</h1>
+  <h1 class="mb-4">Add Cafe</h1>
 
-<!-- form goes here -->
+  <form id="cafe-add-form" method="POST">
+    {% include '_form.html' %}
+
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != 'hidden' %}
+
+    <div class='form-group'>
+      {{ field.label }}
+      {{ field(class="form-control") }}
+
+      <span>
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <b class="text-danger">{{ error }}</b>
+        {% endfor %}
+        {% endif %}
+      </span>
+
+    </div>
+
+    {% endfor %}
+
+  </form>
 
 {% endblock %}
