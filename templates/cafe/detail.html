@@ -14,35 +14,45 @@
 
     <h1>{{ cafe.name }}</h1>
 
-    {% if cafe.is_liked_by %}
-    <form action="/api/unlike" method="POST">
+    {% if g.user %}
+    <form action="/api/unlike" method="POST" id="unlike-form">
       {{ g.csrf_form.hidden_tag() }}
-      <button type="submit" id="unlike-button">Unlike</button>
+      <button data-id="{{cafe.id}}" class="btn btn-outline-primary" type="submit" id="unlike-button" style="display: none;">Unlike</button>
     </form>
-    {% else %}
-    <form action="/api/like" method="POST">
+    <form action="/api/like" method="POST" id="like-form">
       {{ g.csrf_form.hidden_tag() }}
-      <button type="submit" id="like-button">Like</button>
+      <button class="btn btn-outline-primary" type="submit" id="like-button" style="display: none;">Like</button>
     </form>
     {% endif %}
 
     <p class="lead">{{ cafe.description }}</p>
-
+    {% if specialities %}
+    <p class="lead">Specialities:
+    {% for speciality in specialities %}
+        {{ speciality.name }}
+    {% endfor %}
+      </p>
+    {% endif %}
     <p><a href="{{ cafe.url }}">{{ cafe.url }}</a></p>
 
     <p>
       {{ cafe.address }}<br>
       {{ cafe.get_city_state() }}<br>
     </p>
-
+    {% if g.user.admin %}
     <p>
       <a class="btn btn-outline-primary" href="/cafes/{{ cafe.id }}/edit">
         Edit Cafe
       </a>
+      <form id="cafe-delete" method="POST" action="/cafes/{{ cafe.id }}/delete">
+          <button class="btn btn-outline-primary" type="submit">Delete</button>
+      </form>
     </p>
+    {% endif %}
+    <img src="/static/maps/{{ cafe.id }}.jpg" style="width: 500px; height: 500px">
 
   </div>
 
 </div>
-<script src="static/like.js"></script>
+<script src="/static/like.js"></script>
 {% endblock %}

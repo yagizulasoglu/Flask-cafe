@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Flask Cafe {% endblock %}
+
+{% block content %}
+{% if cafes|length == 0 and specialities|length == 0 %}
+<h3>Sorry, no cafes found</h3>
+{% else %}
+<div class="row justify-content-end">
+  <div class="col-sm-9">
+    <div class="row">
+      <ul>
+        {% for cafe in cafes %}
+        <li>
+            <a href="/cafes/{{cafe.id}}">{{ cafe.name }}</a>
+        </li>
+        {% endfor %}
+        {% if specialities %}
+        {% for speciality in specialities %}
+        <li>
+            <a href="/cafes/{{speciality.cafe_id}}">{{ speciality.cafe.name }}</a>
+        </li>
+        {% endfor %}
+        {% endif %}
+      </ul>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

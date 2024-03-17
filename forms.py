@@ -32,7 +32,13 @@ class CafeInfoForm(FlaskForm):
 
     image_url = StringField(
         '(Optional) Image URL',
-        validators=[Optional(), URL(), Length(max=255)]
+        validators=[Optional(), Length(max=255)]
+    )
+
+    specialities = StringField(
+        'Specialties',
+        default="",
+        validators=[Optional(),  Length(max=100)],
     )
 
 class SignupForm(FlaskForm):
@@ -70,7 +76,7 @@ class SignupForm(FlaskForm):
 
     image_url = StringField(
         '(Optional) Image URL',
-        validators=[Optional(), URL(), Length(max=255)]
+        validators=[Optional(), Length(max=255)]
     )
 
 class LoginForm(FlaskForm):
@@ -112,7 +118,7 @@ class ProfileEditForm(FlaskForm):
 
     image_url = StringField(
         '(Optional) Image URL',
-        validators=[Optional(), URL(), Length(max=255)]
+        validators=[Optional(), Length(max=255)]
     )
 
 

@@ -437,7 +437,7 @@ class AuthViewsTestCase(TestCase):
                 "/login", data={"username": "test", "password": "secret"})
             resp = client.post("/logout", follow_redirects=True)
 
-            self.assertIn(b"successfully logged out", resp.data)
+            self.assertIn(b"You are logged out!", resp.data)
             self.assertEqual(session.get(CURR_USER_KEY), None)
 
 

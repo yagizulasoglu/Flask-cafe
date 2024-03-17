@@ -1,16 +1,37 @@
 "use strict";
 
-console.log('safdasf');
 const $likeButton = $("#like-button");
 const $unlikeButton = $("#unlike-button");
+const $likeForm = $("#like-form");
+const $unlikeForm = ($("#unlike-form"));
+const cafeId = $('#unlike-button').data('id');
+
+async function displayButton() {
+  let response = await fetch(`/api/likes?cafe_id=${cafeId}`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    }
+  })
+
+  const result = await response.json();
+  if (result.likes) {
+    $likeButton.hide();
+    $unlikeButton.show();
+  } else {
+    $unlikeButton.hide();
+    $likeButton.show();
+  }
+}
+
+
 
 async function addLike(evt) {
   evt.preventDefault();
-
-  const response = await fetch(`/api/like`, {
+  const response = await fetch("/api/like", {
     method: "POST",
     body: JSON.stringify({
-      cafe_id: 1,
+      cafe_id: cafeId,
     }),
     headers: {
       "content-type": "application/json",
@@ -18,7 +39,7 @@ async function addLike(evt) {
   })
 
   const result = await response.json();
-  console.log(result);
+
   if (result.liked) {
     $likeButton.hide();
     $unlikeButton.show();
@@ -26,14 +47,13 @@ async function addLike(evt) {
 }
 
 
-
 async function removeLike(evt) {
   evt.preventDefault();
 
-  const response = await fetch(`/api/unlike`, {
+  const response = await fetch("/api/unlike", {
     method: "POST",
     body: JSON.stringify({
-      cafe_id: 1,
+      cafe_id: cafeId,
     }),
     headers: {
       "content-type": "application/json",
@@ -45,8 +65,9 @@ async function removeLike(evt) {
   if (!result.liked) {
     $unlikeButton.hide();
     $likeButton.show();
+    $(`#cafe-${cafeId}`).remove();
   }
 }
-
-$unlikeButton.on("submit", unlike);
-$likeButton.on("submit", like);
+$(document).ready(displayButton);
+$unlikeForm.on("submit", removeLike);
+$likeForm.on("submit", addLike);

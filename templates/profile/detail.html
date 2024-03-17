@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %} FULL NAME {% endblock %}
+{% block title %} {{user.first_name}} {{user.last_name}} {% endblock %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
     <p class="lead"> {{user.description}} </p>
 
     <p><b>Username:</b> {{user.username}} </p>
-    <p><b>Email:</b> {{user.Email}} </p>
+    <p><b>Email:</b> {{user.email}} </p>
 
     <p>
       <a class="btn btn-outline-primary" href="/profile/edit">
@@ -27,7 +27,9 @@
     {% if user.liked_cafes %}
     <ul>
       {% for cafe in user.liked_cafes %}
-        <li>{{ cafe.name }}</li>
+        <li id="cafe-{{cafe.id}}">
+          <a href="/cafes/{{cafe.id}}">{{ cafe.name }}</a>
+        </li>
       {% endfor %}
     </ul>
     {% else %}
@@ -37,5 +39,4 @@
   </div>
 
 </div>
-
 {% endblock %}

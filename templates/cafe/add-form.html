@@ -9,25 +9,7 @@
   <form id="cafe-add-form" method="POST">
     {% include '_form.html' %}
 
-    {{ form.hidden_tag() }}
-
-    {% for field in form if field.widget.input_type != 'hidden' %}
-
-    <div class='form-group'>
-      {{ field.label }}
-      {{ field(class="form-control") }}
-
-      <span>
-        {% if field.errors %}
-        {% for error in field.errors %}
-        <b class="text-danger">{{ error }}</b>
-        {% endfor %}
-        {% endif %}
-      </span>
-
-    </div>
-
-    {% endfor %}
+    <button class="btn btn-outline-primary" type="submit">Submit</button>
 
   </form>
 

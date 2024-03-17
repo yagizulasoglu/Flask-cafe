@@ -4,6 +4,8 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
+from mapping import save_map
+
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -90,6 +92,12 @@ class Cafe(db.Model):
             user for user in self.users_liked_cafe if user.id == other_user.id]
         return len(liked_user_list) == 1
 
+    def save_map(self):
+        """Saves the map image for this cafe."""
+
+        save_map(self.id, self.address, self.city.name, self.city.state)
+
+
 class Like(db.Model):
     """Cafe likes"""
 
@@ -106,6 +114,25 @@ class Like(db.Model):
         db.ForeignKey("cafes.id", ondelete="cascade"),
         primary_key=True
     )
+
+
+class Speciality(db.Model):
+    """Specialties for cafes."""
+
+    __tablename__ = 'specialities'
+
+    name = db.Column(
+        db.String(100),
+        primary_key=True,
+    )
+
+    cafe_id = db.Column(
+        db.Integer,
+        db.ForeignKey("cafes.id", ondelete="cascade"),
+        nullable=False
+    )
+
+    cafe = db.relationship("Cafe", backref='specialities')
 
 
 class User(db.Model):

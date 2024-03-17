@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.css">
   <script src="https://unpkg.com/jquery"></script>
   <script src="https://unpkg.com/bootstrap"></script>
+  <link rel="stylesheet"
+        href="https://www.unpkg.com/bootstrap-icons/font/bootstrap-icons.css">
 
   <title>{% block title %} title goes here {% endblock %}</title>
 </head>
@@ -28,20 +30,33 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="/cafes">Cafes</a></li>
       </ul>
+
       <ul class="navbar-nav ml-auto">
+        <form class="form-inline my-2 my-lg-0 mr-3" action="/search">
+          <input
+            name="q"
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="Search Flask Cafe"
+            aria-label="Search"
+            id="search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            <span class="bi bi-search"></span>
+          </button>
+        </form>
         <li class="nav-item">
-          {% if not user_logged_in %}
+          {% if not g.user %}
           <a href="/signup" class="btn-sm btn btn-outline-light">Sign Up</a>
           <a href="/login" class="btn-sm btn btn-outline-light">Log In</a>
           {% else %}
-          <a href="/profile" class="nav-link">FULL NAME</a>
+          <a href="/profile" class="nav-link">{{g.user.first_name}} {{g.user.last_name}}</a>
           {% endif %}
         </li>
       </ul>
 
-      {% if user_logged_in %}
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn-sm btn btn-outline-light">Log Out</button>
+      {% if g.user %}
+      <form class="form-inline my-2 my-lg-0" action="/logout" method="POST">
+        <button  class="btn-sm btn btn-outline-light">Log Out</button>
       </form>
       {% endif %}
 

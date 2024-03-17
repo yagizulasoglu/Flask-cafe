@@ -25,7 +25,7 @@ db.session.commit()
 c1 = Cafe(
     name="Bernie's Cafe",
     description='Serving locals in Noe Valley. A great place to sit and write'
-        ' and write Rithm exercises.',
+    ' and write Rithm exercises.',
     address="3966 24th St",
     city_code='sf',
     url='https://www.yelp.com/biz/bernies-san-francisco',
@@ -35,7 +35,7 @@ c1 = Cafe(
 c2 = Cafe(
     name='Perch Coffee',
     description='Hip and sleek place to get cardamom lattés when biking'
-        ' around Oakland.',
+    ' around Oakland.',
     address='440 Grand Ave',
     city_code='oak',
     url='https://perchoffee.com',
@@ -73,7 +73,7 @@ db.session.commit()
 
 
 ######################################
-#add likes
+# add likes
 
 u1.liked_cafes.append(c1)
 u1.liked_cafes.append(c2)
@@ -85,7 +85,7 @@ db.session.commit()
 #######################################
 # cafe maps
 
-# c1.save_map()
-# c2.save_map()
-#
-#db.session.commit()
+c1.save_map()
+c2.save_map()
+
+db.session.commit()
