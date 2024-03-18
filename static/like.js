@@ -6,6 +6,9 @@ const $likeForm = $("#like-form");
 const $unlikeForm = ($("#unlike-form"));
 const cafeId = $('#unlike-button').data('id');
 
+/**The function is for the initial page. If the user liked the cafe before,
+ * it only shows the unlike button. It shows the like button otherwise.
+ */
 async function displayButton() {
   let response = await fetch(`/api/likes?cafe_id=${cafeId}`, {
     method: "GET",
@@ -25,6 +28,9 @@ async function displayButton() {
 }
 
 
+/**When the user likes a cafe, It sends a post request and shows the unlike
+ * button instead of the like button.
+ */
 
 async function addLike(evt) {
   evt.preventDefault();
@@ -46,6 +52,9 @@ async function addLike(evt) {
   }
 }
 
+/**When the user unlikes a cafe, It sends a post request and shows the like
+ * button instead of the unlike button.
+ */
 
 async function removeLike(evt) {
   evt.preventDefault();
@@ -65,7 +74,6 @@ async function removeLike(evt) {
   if (!result.liked) {
     $unlikeButton.hide();
     $likeButton.show();
-    $(`#cafe-${cafeId}`).remove();
   }
 }
 $(document).ready(displayButton);
