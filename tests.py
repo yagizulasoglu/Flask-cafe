@@ -120,7 +120,7 @@ class HomepageViewsTestCase(TestCase):
     def test_homepage(self):
         with app.test_client() as client:
             resp = client.get("/")
-            self.assertIn(b'Where Coffee Dreams Come True', resp.data)
+            self.assertIn(b'Where Coffee Dreams Come True!', resp.data)
 
 
 #######################################
@@ -206,25 +206,32 @@ class CafeViewsTestCase(TestCase):
         cafe = Cafe(**CAFE_DATA)
         db.session.add(cafe)
 
+        admin = User(**ADMIN_USER_DATA)
+        db.session.add(admin)
+
         db.session.commit()
 
         self.cafe_id = cafe.id
+        self.admin_id = admin.id
 
     def tearDown(self):
         """After each test, remove all cafes."""
 
         Cafe.query.delete()
         City.query.delete()
+        User.query.delete()
         db.session.commit()
 
     def test_list(self):
         with app.test_client() as client:
+            login_for_test(client, self.admin_id)
             resp = client.get("/cafes")
             self.assertEqual(resp.status_code, 200)
             self.assertIn(b"Test Cafe", resp.data)
 
     def test_detail(self):
         with app.test_client() as client:
+            login_for_test(client, self.admin_id)
             resp = client.get(f"/cafes/{self.cafe_id}")
             self.assertEqual(resp.status_code, 200)
             self.assertIn(b"Test Cafe", resp.data)
