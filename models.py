@@ -121,9 +121,14 @@ class Speciality(db.Model):
 
     __tablename__ = 'specialities'
 
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
     name = db.Column(
         db.String(100),
-        primary_key=True,
+        nullable=False,
     )
 
     cafe_id = db.Column(

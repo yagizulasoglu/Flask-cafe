@@ -10,4 +10,11 @@
   {% include '_form.html' %}
   <button class="btn btn-outline-primary" type="submit">Submit</button>
 </form>
+<form method="POST" action="/profile/delete">
+  {{ g.csrf_form.hidden_tag() }}
+  <button class="btn btn-outline-danger ms-2">
+    Delete Profile
+  </button>
+</form>
+
 {% endblock %}

@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from flask import Flask, render_template, flash, redirect, session, g, jsonify, request
-#from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_
 
@@ -24,7 +24,7 @@ if app.debug:
 
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 
-#toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
@@ -45,11 +45,13 @@ def add_user_to_g():
     else:
         g.user = None
 
+
 @app.before_request
 def form_protection():
     """Creates Csrf form protection"""
 
     g.csrf_form = CsrfForm()
+
 
 def do_login(user):
     """Log in user."""
@@ -63,6 +65,7 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
+
 def get_cities_choices():
     """Gets all cities' ids and name from the database"""
 
@@ -72,11 +75,13 @@ def get_cities_choices():
 #######################################
 # homepage
 
+
 @app.get("/")
 def homepage():
     """Show homepage."""
 
     return render_template("homepage.html")
+
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -127,6 +132,7 @@ def signup():
 
     else:
         return render_template('auth/signup-form.html', form=form)
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -234,10 +240,11 @@ def add_cafe():
         db.session.commit()
 
         flash(f"{cafe.name} added.")
-        return redirect (f'/cafes/{cafe.id}')
+        return redirect(f'/cafes/{cafe.id}')
 
     else:
         return render_template('cafe/add-form.html', form=form)
+
 
 @app.route('/cafes/<int:cafe_id>/edit', methods=["GET", "POST"])
 def edit_cafe(cafe_id):
@@ -267,18 +274,19 @@ def edit_cafe(cafe_id):
 
         if not form.specialities.data == "":
 
-            speciality = Speciality(name=form.specialities.data, cafe_id=cafe_id)
+            speciality = Speciality(
+                name=form.specialities.data, cafe_id=cafe_id)
             db.session.add(speciality)
-
 
         cafe.save_map()
         db.session.commit()
 
         flash(f"{cafe.name} edited.", "success")
-        return redirect (f'/cafes/{cafe.id}')
+        return redirect(f'/cafes/{cafe.id}')
 
     else:
         return render_template('cafe/edit-form.html', form=form, cafe=cafe, specialities=specialities)
+
 
 @app.post('/cafes/<int:cafe_id>/delete')
 def delete_cafe(cafe_id):
@@ -323,12 +331,14 @@ def search_cafe():
         specialities = []
     else:
         cafes = Cafe.query.filter(or_(Cafe.name.ilike(f"%{search}%"))).all()
-        specialities = Speciality.query.filter(or_(Speciality.name.ilike(f"%{search}%"))).all()
+        specialities = Speciality.query.filter(
+            or_(Speciality.name.ilike(f"%{search}%"))).all()
 
     return render_template('search.html', cafes=cafes, specialities=specialities)
 
 ##############################
-#Profile
+# Profile
+
 
 @app.get('/profile')
 def get_profile():
@@ -342,6 +352,7 @@ def get_profile():
 
     return render_template('profile/detail.html', user=user)
 
+
 @app.route('/profile/edit', methods=["GET", "POST"])
 def profile():
     """Update profile for current user."""
@@ -353,11 +364,11 @@ def profile():
     form = ProfileEditForm(obj=g.user)
 
     if form.validate_on_submit():
-        g.user.first_name=form.first_name.data
-        g.user.last_name=form.last_name.data
-        g.user.description=form.description.data
-        g.user.email=form.email.data
-        g.user.image_url=form.image_url.data or User.image_url.default.arg
+        g.user.first_name = form.first_name.data
+        g.user.last_name = form.last_name.data
+        g.user.description = form.description.data
+        g.user.email = form.email.data
+        g.user.image_url = form.image_url.data or User.image_url.default.arg
 
         db.session.commit()
 
@@ -365,6 +376,28 @@ def profile():
         return redirect("/profile")
     else:
         return render_template("profile/edit-form.html", form=form)
+
+
+@app.post('/profile/delete')
+def delete_user():
+    """Delete user.
+
+    Redirect to signup page.
+    """
+
+    if not g.csrf_form.validate_on_submit() or not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    do_logout()
+
+    Like.query.filter_by(user_id=g.user.id).delete()
+    db.session.delete(g.user)
+    db.session.commit()
+    flash("User Deleted!", "danger")
+
+    return redirect("/signup")
+
 
 @app.get('/api/likes')
 def likes():
@@ -382,6 +415,7 @@ def likes():
 
     return jsonify({"likes": bool(liked)})
 
+
 @app.post('/api/like')
 def like():
     """makes the current user like a cafe. Return JSON {"liked": cafe_id}
@@ -390,7 +424,6 @@ def like():
 
     if not g.user:
         return jsonify({"error": "Not logged in"}), 400
-
 
     cafe_id = request.json['cafe_id']
     cafe = Cafe.query.get_or_404(cafe_id)
@@ -409,7 +442,6 @@ def unlike():
 
     if not g.user:
         return jsonify({"error": "Not logged in"}), 400
-
 
     cafe_id = request.json['cafe_id']
 
